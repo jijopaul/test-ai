@@ -67,7 +67,8 @@ pipeline {
 				  			    container('kubectl'){
                   sh 'echo "Downloading content with AWS creds"'
                       s3Download(file:'test.txt', bucket:'amytest123', path:'test.txt', force:true)
-					  sh 'ls -ltrh'  
+					  sh 'ls -ltrh'
+					sh 'cat test.txt'			    
                   }
 				  }
               }
@@ -79,6 +80,7 @@ pipeline {
                   sh 'echo "Test"'
                     //  s3Download(file:'test.txt', bucket:'amytest123', path:'test.txt', force:true)
 					  sh 'ls -ltrh'  
+					    sh 'cat test.txt'
                   }
 				  }
               }
