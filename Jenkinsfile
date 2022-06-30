@@ -73,7 +73,7 @@ pipeline {
                   withAWS(region:'eu-west-1',credentials:'itservice-test-id') {
 				  			    container('kubectl'){
                   sh 'echo "Downloading content with AWS creds"'
-                      s3Download(file:'test.txt', bucket:'amytest123', path:'test.txt', force:true)
+                      s3Download(file:'visual match.zip', bucket:'amytest123', path:'visual match.zip', force:true)
 					  sh 'ls -ltrh'  
                   }
 				  }
