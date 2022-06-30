@@ -1,4 +1,11 @@
 pipeline {
+  environment {
+    GIT_COMMIT_SHORT = "${env.GIT_COMMIT.take(7)}"
+    BRANCH_NAME_LOWER = "${BRANCH_NAME.toLowerCase()}"
+    IMAGE_REPO = '765119597117.dkr.ecr.eu-west-1.amazonaws.com'
+    APP_NAME = "test-app"
+    IMAGE_TAG = "${IMAGE_REPO}/${APP_NAME}:${env.BRANCH_NAME_LOWER}"
+  }
   agent {
     kubernetes {
       yaml '''
@@ -67,8 +74,7 @@ pipeline {
 				  			    container('kubectl'){
                   sh 'echo "Downloading content with AWS creds"'
                       s3Download(file:'test.txt', bucket:'amytest123', path:'test.txt', force:true)
-					  sh 'ls -ltrh'
-					sh 'cat test.txt'			    
+					  sh 'ls -ltrh'  
                   }
 				  }
               }
@@ -77,10 +83,10 @@ pipeline {
               steps {
                   withAWS(region:'eu-west-1',credentials:'itservice-test-id') {
 				    container ('kaniko') {
-                  sh 'echo "Test"'
-                    //  s3Download(file:'test.txt', bucket:'amytest123', path:'test.txt', force:true)
-					  sh 'ls -ltrh'  
-					    sh 'cat test.txt'
+               sh label: 'Auth to ECR', script: '/busybox/echo "{\\"credHelpers\\":{\\"$IMAGE_REPO\\":\\"ecr-login\\"}}" > /kaniko/.docker/config.json'
+                sh label: 'Build image with kaniko', script: '/kaniko/executor -f `pwd`/Dockerfile -c `pwd` --cache=true --destination=${IMAGE_TAG} --destination=${IMAGE_TAG}-${GIT_COMMIT_SHORT}'
+					  sh 'ls -ltrh' 
+					  
                   }
 				  }
               }
