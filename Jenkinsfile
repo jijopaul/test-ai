@@ -12,7 +12,7 @@ pipeline {
          }      
          stage('Upload to AWS') {
               steps {
-                  withAWS(region:'eu-west-1',credentials:'aws-test-id') {
+                  withAWS(region:'eu-west-1',credentials:'itservice-test-id') {
                   sh 'echo "Uploading content with AWS creds"'
                       s3Download(file:'test.txt', bucket:'amytest123', path:'test.txt', force:true)
 				//	  stash includes: '*.txt', name: 'app'
@@ -22,7 +22,7 @@ pipeline {
          }
          stage('Upload to stash') {
               steps {
-                  withAWS(region:'eu-west-1',credentials:'aws-test-id') {
+                  withAWS(region:'eu-west-1',credentials:'itservice-test-id') {
                   sh 'echo "foen content with AWS creds"'
                     // s3Download(file:'test.txt', bucket:'amytest123', path:'test.txt', force:true)
 			//		  unstash 'app' 
